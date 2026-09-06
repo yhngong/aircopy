@@ -94,6 +94,15 @@
   const fullscreenBurstIndicator = document.getElementById('fullscreenBurstIndicator');
   const btnCloseFullscreen = document.getElementById('btnCloseFullscreen');
 
+  const shareAppModal = document.getElementById('shareAppModal');
+  const btnShareAppModal = document.getElementById('btnShareAppModal');
+  const btnShareAppBanner = document.getElementById('btnShareAppBanner');
+  const btnCloseShareApp = document.getElementById('btnCloseShareApp');
+  const appUrlQrTarget = document.getElementById('appUrlQrTarget');
+  const appUrlDisplay = document.getElementById('appUrlDisplay');
+  const btnCopyAppUrl = document.getElementById('btnCopyAppUrl');
+  let appShareQrInstance = null;
+
   const aboutModal = document.getElementById('aboutModal');
   const btnAboutModal = document.getElementById('btnAboutModal');
   const btnCloseAbout = document.getElementById('btnCloseAbout');
@@ -101,6 +110,7 @@
   const networkBadge = document.getElementById('networkBadge');
 
   // --- Constants ---
+  const GITHUB_PAGES_URL = 'https://yhngong.github.io/aircopy/';
   const CHUNK_SIZE = 350; // chars per QR frame in burst mode
   const BURST_THRESHOLD = 500; // Switch to burst mode if text exceeds this
 
@@ -688,19 +698,73 @@
       .replace(/'/g, '&#039;');
   }
 
+  // --- App Share & Link QR ---
+  function getAppShareUrl() {
+    if (window.location.protocol.startsWith('http') &&
+        window.location.hostname !== 'localhost' &&
+        window.location.hostname !== '127.0.0.1') {
+      return window.location.origin + window.location.pathname;
+    }
+    return GITHUB_PAGES_URL;
+  }
+
+  function openShareAppModal() {
+    const url = getAppShareUrl();
+    appUrlDisplay.textContent = url;
+    shareAppModal.classList.remove('hidden');
+
+    if (!appShareQrInstance) {
+      appShareQrInstance = new QRCode(appUrlQrTarget, {
+        text: url,
+        width: 220,
+        height: 220,
+        colorDark: '#000000',
+        colorLight: '#ffffff',
+        correctLevel: QRCode.CorrectLevel.M
+      });
+    } else {
+      appShareQrInstance.clear();
+      appShareQrInstance.makeCode(url);
+    }
+  }
+
+  function closeShareAppModal() {
+    shareAppModal.classList.add('hidden');
+  }
+
   // --- Modals Setup ---
   function setupModals() {
+    // Share App Modal
+    btnShareAppModal.addEventListener('click', openShareAppModal);
+    if (btnShareAppBanner) {
+      btnShareAppBanner.addEventListener('click', openShareAppModal);
+    }
+    btnCloseShareApp.addEventListener('click', closeShareAppModal);
+    shareAppModal.addEventListener('click', (e) => {
+      if (e.target === shareAppModal) closeShareAppModal();
+    });
+    btnCopyAppUrl.addEventListener('click', () => {
+      navigator.clipboard.writeText(getAppShareUrl()).then(() => {
+        showToast('App link copied to clipboard!');
+      }).catch(() => {
+        showToast('Could not copy link');
+      });
+    });
+
+    // About Modal
     btnAboutModal.addEventListener('click', () => aboutModal.classList.remove('hidden'));
     btnCloseAbout.addEventListener('click', () => aboutModal.classList.add('hidden'));
     aboutModal.addEventListener('click', (e) => {
       if (e.target === aboutModal) aboutModal.classList.add('hidden');
     });
 
+    // Fullscreen QR Modal
     btnCloseFullscreen.addEventListener('click', closeFullscreenQR);
     fullscreenModal.addEventListener('click', (e) => {
       if (e.target === fullscreenModal) closeFullscreenQR();
     });
 
+    // Clear History
     btnClearHistory.addEventListener('click', () => {
       if (confirm('Clear all transfer history?')) {
         historyItems = [];

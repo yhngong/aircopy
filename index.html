@@ -38,6 +38,12 @@
         </div>
       </div>
       <div class="header-actions">
+        <button id="btnShareAppModal" class="icon-button" title="Scan to open AirCopy on another phone" aria-label="Share App">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect>
+            <line x1="12" y1="18" x2="12.01" y2="18"></line>
+          </svg>
+        </button>
         <button id="btnAboutModal" class="icon-button" title="How it works" aria-label="How it works">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <circle cx="12" cy="12" r="10"></circle>
@@ -77,6 +83,15 @@
     <main class="app-main">
       <!-- TAB 1: SEND -->
       <section id="tabSend" class="tab-panel active">
+        <!-- Quick App Sharing Helper -->
+        <div class="share-app-banner">
+          <div class="share-app-banner-info">
+            <span class="banner-icon">📱</span>
+            <span>Open AirCopy on another phone</span>
+          </div>
+          <button id="btnShareAppBanner" class="btn btn-secondary btn-xs">Show App QR</button>
+        </div>
+
         <div class="panel-card">
           <div class="card-header">
             <h2>Enter Text to Share</h2>
@@ -285,6 +300,27 @@
           <div id="fullscreenBurstIndicator" class="fullscreen-burst-badge hidden">Part 1/1</div>
         </div>
         <p class="fullscreen-hint">Turn up screen brightness for faster scanning</p>
+      </div>
+    </div>
+
+    <!-- Share App QR Modal -->
+    <div id="shareAppModal" class="about-modal hidden">
+      <div class="about-content text-center">
+        <div class="about-header">
+          <h3>Open on Another Phone</h3>
+          <button id="btnCloseShareApp" class="icon-button">&times;</button>
+        </div>
+        <div class="share-app-body">
+          <p class="share-app-instruction">Point any smartphone's <strong>regular camera app</strong> (iPhone Camera, Android Camera, or Google Lens) at this QR code:</p>
+          <div class="app-qr-container">
+            <div id="appUrlQrTarget" class="app-qr-box"></div>
+          </div>
+          <div class="app-url-card">
+            <span id="appUrlDisplay" class="app-url-text">https://yhngong.github.io/aircopy/</span>
+            <button id="btnCopyAppUrl" class="btn btn-primary btn-sm">Copy Link</button>
+          </div>
+          <p class="share-app-tip">💡 No installation needed. Opens directly in Safari, Chrome, or any browser.</p>
+        </div>
       </div>
     </div>
 
