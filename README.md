@@ -56,3 +56,16 @@ To test across two smartphones on your local network during development:
 ifconfig | grep "inet " | grep -v 127.0.0.1
 ```
 Open `http://<your-computer-ip>:8000` on both phones.
+
+---
+
+## License & Acknowledgments
+
+AirCopy is open source under the [MIT License](LICENSE).
+
+### Third-Party Libraries
+This project bundles two open-source libraries locally in `lib/` to enable 100% offline capability:
+- **[qrcodejs](https://github.com/davidshimjs/qrcodejs)** by davidshimjs — Licensed under the **MIT License**.
+- **[jsQR](https://github.com/cozmo/jsQR)** by Cosmo Wolfe — Licensed under the **Apache License 2.0**.
+
+For full license texts and copyright notices, see [THIRD-PARTY-LICENSES.md](THIRD-PARTY-LICENSES.md).
