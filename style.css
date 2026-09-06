@@ -526,6 +526,196 @@ textarea:focus {
   border-radius: 9999px;
   font-size: 0.75rem;
   backdrop-filter: blur(4px);
+  transition: opacity 0.2s ease;
+}
+
+/* Receiver QR Decode Success Animations */
+.reticle.reticle-locked {
+  transform: scale(0.96);
+  transition: transform 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.reticle.reticle-locked .reticle-corner {
+  border-color: #10b981;
+  box-shadow: 0 0 16px rgba(16, 185, 129, 0.9), inset 0 0 8px rgba(16, 185, 129, 0.5);
+  transition: all 0.2s ease;
+}
+
+.reticle.reticle-locked .laser-scanner {
+  background: linear-gradient(90deg, transparent, #10b981, transparent);
+  box-shadow: 0 0 18px #10b981;
+  animation: none;
+  top: 50%;
+  height: 3px;
+  transition: all 0.2s ease;
+}
+
+/* Shutter Light Flash */
+.scanner-viewport-wrapper.scanner-flash::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.7) 0%, rgba(16, 185, 129, 0.4) 100%);
+  pointer-events: none;
+  z-index: 50;
+  animation: flashFade 0.35s cubic-bezier(0.1, 0.9, 0.2, 1) forwards;
+}
+
+@keyframes flashFade {
+  0% { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+/* Scan Success Overlay */
+.scan-success-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 40;
+  pointer-events: none;
+  background: rgba(9, 13, 22, 0.4);
+  backdrop-filter: blur(3px);
+  animation: overlayFadeIn 0.2s ease-out forwards;
+}
+
+@keyframes overlayFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.success-ripple {
+  position: absolute;
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  border: 3px solid #10b981;
+  animation: ripplePing 0.7s cubic-bezier(0, 0.2, 0.8, 1) forwards;
+}
+
+.success-ripple-outer {
+  position: absolute;
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  border: 2px solid rgba(56, 189, 248, 0.8);
+  animation: ripplePing 0.7s cubic-bezier(0, 0.2, 0.8, 1) 0.12s forwards;
+}
+
+@keyframes ripplePing {
+  0% {
+    transform: scale(0.6);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(3.2);
+    opacity: 0;
+  }
+}
+
+.success-badge {
+  width: 76px;
+  height: 76px;
+  border-radius: 50%;
+  background: #10b981;
+  box-shadow: 0 0 35px rgba(16, 185, 129, 0.75), 0 6px 20px rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: badgeSpring 0.45s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+  z-index: 2;
+}
+
+@keyframes badgeSpring {
+  0% {
+    transform: scale(0) rotate(-45deg);
+    opacity: 0;
+  }
+  70% {
+    transform: scale(1.15) rotate(5deg);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1) rotate(0deg);
+    opacity: 1;
+  }
+}
+
+.checkmark-svg {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  display: block;
+  stroke-width: 4.5;
+  stroke: #ffffff;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.checkmark-circle {
+  stroke-dasharray: 166;
+  stroke-dashoffset: 166;
+  stroke-width: 3.5;
+  stroke: rgba(255, 255, 255, 0.35);
+  animation: checkStroke 0.4s cubic-bezier(0.65, 0, 0.45, 1) forwards;
+}
+
+.checkmark-check {
+  transform-origin: 50% 50%;
+  stroke-dasharray: 48;
+  stroke-dashoffset: 48;
+  animation: checkStroke 0.3s cubic-bezier(0.65, 0, 0.45, 1) 0.15s forwards;
+}
+
+@keyframes checkStroke {
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+.success-badge-text {
+  margin-top: 14px;
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #ffffff;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.8), 0 0 15px rgba(16, 185, 129, 0.8);
+  letter-spacing: 0.05em;
+  animation: textPopIn 0.3s ease-out 0.12s both;
+  z-index: 2;
+}
+
+@keyframes textPopIn {
+  0% {
+    opacity: 0;
+    transform: translateY(10px) scale(0.9);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Result Card Reveal Animation */
+.card-reveal-animate {
+  animation: resultCardSlideUp 0.45s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes resultCardSlideUp {
+  0% {
+    opacity: 0;
+    transform: translateY(24px) scale(0.97);
+    box-shadow: 0 0 0 rgba(16, 185, 129, 0);
+  }
+  50% {
+    box-shadow: 0 0 35px rgba(16, 185, 129, 0.45);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    box-shadow: var(--shadow);
+  }
 }
 
 .scanner-fallback-message {

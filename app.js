@@ -60,10 +60,13 @@
   const burstSpeedLabel = document.getElementById('burstSpeedLabel');
 
   // Receive Tab Elements
+  const scannerViewportWrapper = document.getElementById('scannerViewportWrapper');
   const scannerVideo = document.getElementById('scannerVideo');
   const scannerCanvas = document.getElementById('scannerCanvas');
   const scannerCanvasCtx = scannerCanvas.getContext('2d', { willReadFrequently: true });
   const viewfinderOverlay = document.getElementById('viewfinderOverlay');
+  const scannerReticle = document.getElementById('scannerReticle');
+  const scanSuccessOverlay = document.getElementById('scanSuccessOverlay');
   const scannerMessage = document.getElementById('scannerMessage');
   const scannerMessageText = document.getElementById('scannerMessageText');
   const btnStartCamera = document.getElementById('btnStartCamera');
@@ -405,6 +408,10 @@
 
     scannerMessage.classList.add('hidden');
     scanResultCard.classList.add('hidden');
+    scanResultCard.classList.remove('card-reveal-animate');
+    if (scanSuccessOverlay) scanSuccessOverlay.classList.add('hidden');
+    if (scannerReticle) scannerReticle.classList.remove('reticle-locked');
+    if (scannerViewportWrapper) scannerViewportWrapper.classList.remove('scanner-flash');
     viewfinderOverlay.classList.remove('hidden');
 
     const constraints = {
@@ -481,6 +488,16 @@
 
   function resumeScanning() {
     scanResultCard.classList.add('hidden');
+    scanResultCard.classList.remove('card-reveal-animate');
+    if (scanSuccessOverlay) {
+      scanSuccessOverlay.classList.add('hidden');
+    }
+    if (scannerReticle) {
+      scannerReticle.classList.remove('reticle-locked');
+    }
+    if (scannerViewportWrapper) {
+      scannerViewportWrapper.classList.remove('scanner-flash');
+    }
     viewfinderOverlay.classList.remove('hidden');
     chunkProgressModal.classList.add('hidden');
     isScanning = true;
@@ -598,6 +615,20 @@
     isScanning = false;
     triggerFeedback();
 
+    // 1. Receiver-side decode animation sequence
+    if (scannerViewportWrapper) {
+      scannerViewportWrapper.classList.remove('scanner-flash');
+      void scannerViewportWrapper.offsetWidth; // force DOM reflow
+      scannerViewportWrapper.classList.add('scanner-flash');
+    }
+    if (scannerReticle) {
+      scannerReticle.classList.add('reticle-locked');
+    }
+    if (scanSuccessOverlay) {
+      scanSuccessOverlay.classList.remove('hidden');
+    }
+
+    // 2. Prepare result text and actions
     scannedResultText.textContent = fullText;
     resultMeta.textContent = `${fullText.length} characters • ${fullText.split(/\s+/).filter(Boolean).length} words`;
     resultTimestamp.textContent = new Date().toLocaleTimeString();
@@ -610,10 +641,26 @@
       btnOpenLink.classList.add('hidden');
     }
 
-    scanResultCard.classList.remove('hidden');
-    viewfinderOverlay.classList.add('hidden');
-
     saveHistoryItem(fullText);
+
+    // 3. Smooth transition: let the success animation shine, then reveal result card
+    setTimeout(() => {
+      if (scanSuccessOverlay) {
+        scanSuccessOverlay.classList.add('hidden');
+      }
+      if (scannerReticle) {
+        scannerReticle.classList.remove('reticle-locked');
+      }
+      if (scannerViewportWrapper) {
+        scannerViewportWrapper.classList.remove('scanner-flash');
+      }
+      viewfinderOverlay.classList.add('hidden');
+
+      scanResultCard.classList.remove('hidden');
+      scanResultCard.classList.remove('card-reveal-animate');
+      void scanResultCard.offsetWidth; // force DOM reflow
+      scanResultCard.classList.add('card-reveal-animate');
+    }, 620);
   }
 
   // --- History Management ---

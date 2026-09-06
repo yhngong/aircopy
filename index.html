@@ -186,13 +186,13 @@
           </div>
 
           <!-- Video Camera Container -->
-          <div class="scanner-viewport-wrapper">
+          <div class="scanner-viewport-wrapper" id="scannerViewportWrapper">
             <video id="scannerVideo" playsinline muted autoplay></video>
             <canvas id="scannerCanvas" class="hidden"></canvas>
 
             <!-- Target Finder Overlay -->
             <div class="viewfinder-overlay" id="viewfinderOverlay">
-              <div class="reticle">
+              <div class="reticle" id="scannerReticle">
                 <div class="reticle-corner top-left"></div>
                 <div class="reticle-corner top-right"></div>
                 <div class="reticle-corner bottom-left"></div>
@@ -200,6 +200,19 @@
                 <div class="laser-scanner"></div>
               </div>
               <p class="viewfinder-tip">Center QR code inside the frame</p>
+            </div>
+
+            <!-- Decode Success Animation Overlay (Receiver Only) -->
+            <div id="scanSuccessOverlay" class="scan-success-overlay hidden">
+              <div class="success-ripple"></div>
+              <div class="success-ripple-outer"></div>
+              <div class="success-badge">
+                <svg class="checkmark-svg" viewBox="0 0 52 52">
+                  <circle class="checkmark-circle" cx="26" cy="26" r="23" fill="none"/>
+                  <path class="checkmark-check" fill="none" d="M14 27l7 7 17-17"/>
+                </svg>
+              </div>
+              <span class="success-badge-text">Decoded!</span>
             </div>
 
             <!-- Multi-Part Chunk Progress Indicator -->
